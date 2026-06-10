@@ -4,10 +4,14 @@ import ch.hevs.gdx2d.lib.GdxGraphics
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import scala.collection.mutable.ArrayBuffer
 
 class Player(startX: Float, startY: Float) {
   var x: Float = startX
   var y: Float = startY
+
+  var spawnX: Float = startX
+  var spawnY: Float = startY
 
   var vx: Float = 0f
   var vy: Float = 0f
@@ -15,6 +19,8 @@ class Player(startX: Float, startY: Float) {
   var onGround: Boolean = false
   var isDashing: Boolean = false
   var canDash: Boolean = true
+
+  var reachedExit: Boolean = false
 
   var dashFrames: Int = 0
   var dashDirX: Float = 0f
@@ -31,22 +37,22 @@ class Player(startX: Float, startY: Float) {
   val DASH_SPEED = 33.33f
   val DASH_DURATION = 9
 
-  val FLOOR_Y = 100f
+  def update(level: Level): Unit = {
+    reachedExit = false
 
-  def update(): Unit = {
     if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT) && canDash && !isDashing) {
       startDash()
     }
 
     if (isDashing) {
-      updateDash()
+      updateDash(level.walls, level.springs)
     } else {
       updateHorizontal()
       updateVertical()
-      x = x + vx
-      y = y + vy
-      handleFloor()
+      moveAndCollide(level.walls, level.springs)
     }
+
+    checkLevel(level)
   }
 
   def updateHorizontal(): Unit = {
@@ -105,13 +111,11 @@ class Player(startX: Float, startY: Float) {
     canDash = false
   }
 
-  def updateDash(): Unit = {
+  def updateDash(walls: ArrayBuffer[Wall], springs: ArrayBuffer[Spring]): Unit = {
     vx = dashDirX * DASH_SPEED
     vy = dashDirY * DASH_SPEED
 
-    x = x + vx
-    y = y + vy
-    handleFloor()
+    moveAndCollide(walls, springs)
     dashFrames = dashFrames - 1
 
     if (dashFrames <= 0) {
@@ -121,17 +125,102 @@ class Player(startX: Float, startY: Float) {
     }
   }
 
-  // todo : enlever quand les vrais niveaux seront la (juste pour tester)
-  def handleFloor(): Unit = {
-    if (y <= FLOOR_Y) {
-      y = FLOOR_Y
-      if (vy < 0) vy = 0
-      onGround = true
-      canDash = true
+  def moveAndCollide(walls: ArrayBuffer[Wall], springs: ArrayBuffer[Spring]): Unit = {
+    x = x + vx
+    for (w <- walls) {
+      if (w.hits(x, y, width, height)) {
+        if (vx > 0) {
+          x = w.x - width
+        }
+        else if (vx < 0) {
+          x = w.x + w.width
+        }
+        vx = 0
+      }
+    }
+    for (s <- springs) {
+      if (s.hits(x, y, width, height)) {
+        if (vx > 0) {
+          x = s.x - width
+        }
+        else if (vx < 0) {
+          x = s.x + s.width
+        }
+        vx = 0
+      }
+    }
+
+    onGround = false
+    y = y + vy
+    for (w <- walls) {
+      if (w.hits(x, y, width, height)) {
+        if (vy < 0) {
+          y = w.y + w.height
+          onGround = true
+          canDash = true
+        }
+        else if (vy > 0) {
+          y = w.y - height
+        }
+        vy = 0
+      }
+    }
+    for (s <- springs) {
+      if (s.hits(x, y, width, height)) {
+        if (vy < 0) {
+          y = s.y + s.height
+          vy = s.BOUNCE_VELOCITY
+          onGround = false
+          canDash = true
+          println("ressort")
+        }
+        else if (vy > 0) {
+          y = s.y - height
+          vy = 0
+        }
+      }
     }
   }
 
+  def checkLevel(level: Level): Unit = {
+    for (s <- level.spikes) {
+      if (s.hits(x, y, width, height)) {
+        respawn()
+      }
+    }
+    for (o <- level.orbs) {
+      if (o.hits(x, y, width, height)) {
+        canDash = true
+        o.active = false
+        o.respawnAt = System.currentTimeMillis() + o.RESPAWN_MS
+        println("orbe")
+      }
+    }
+    for (e <- level.exits) {
+      if (e.hits(x, y, width, height)) {
+        reachedExit = true
+      }
+    }
+  }
+
+  def respawn(): Unit = {
+    println("mort")
+    x = spawnX
+    y = spawnY
+    vx = 0
+    vy = 0
+    isDashing = false
+    canDash = true
+  }
+
+  def setSpawn(sx: Float, sy: Float): Unit = {
+    spawnX = sx
+    spawnY = sy
+    x = sx
+    y = sy
+  }
+
   def draw(g: GdxGraphics): Unit = {
-    g.drawFilledRectangle(x, y, width, height, 0, Color.CYAN)
+    g.drawFilledRectangle(x + width / 2, y + height / 2, width, height, 0, Color.CYAN)
   }
 }
