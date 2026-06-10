@@ -8,7 +8,7 @@ class Orb(val x: Float, val y: Float, val width: Float, val height: Float) {
   var active: Boolean = true
   var respawnAt: Long = 0
 
-  val RESPAWN_MS = 5000
+  val RESPAWN_MS = 3000
 
   def update(): Unit = {
     if (!active && System.currentTimeMillis() >= respawnAt) {

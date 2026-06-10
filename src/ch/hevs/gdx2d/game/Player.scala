@@ -29,12 +29,12 @@ class Player(startX: Float, startY: Float) {
   val width = 48
   val height = 64
 
-  val MAX_SPEED = 12f
-  val ACCELERATION = 2.22f
+  val MAX_SPEED = 10f
+  val ACCELERATION = 2f
   val GRAVITY = 0.667f
   val MAX_FALL = 26.67f
-  val JUMP_VELOCITY = 20f
-  val DASH_SPEED = 33.33f
+  val JUMP_VELOCITY = 15f
+  val DASH_SPEED = 25f
   val DASH_DURATION = 9
 
   def update(level: Level): Unit = {
