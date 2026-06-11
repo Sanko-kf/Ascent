@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color
 
 class Ascent extends PortableApplication(1920, 1080) {
 
-  val levelFiles = Array("level1.txt", "level2.txt", "level3.txt", "level4.txt")
+  val levelFiles = Array("level1.txt", "level2.txt", "level3.txt", "level4.txt", "level5.txt", "level6.txt")
   var currentLevel = 0
 
   var player: Player = null
