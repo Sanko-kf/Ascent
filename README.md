@@ -6,9 +6,7 @@ Ascent is a 2D platformer made in Scala with GDX2D. You go through a set of leve
 
 The project takes inspiration from Celeste: quick controls, one dash to manage, and short rooms that are meant to be retried until you get them right.
 
-<video controls width="960" src="screenshots/video.mp4">
-  <a href="screenshots/video.mp4">Watch gameplay demo</a>
-</video>
+https://github.com/user-attachments/assets/d246f72b-fcc4-4c70-a9c9-550c7a48b0f1
 
 ## Create your own levels
 
