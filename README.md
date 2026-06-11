@@ -68,6 +68,12 @@ Touch the exit tile to go to the next level. Spikes send you back to your spawn 
 
 You get one dash until you land on the ground again or pick up an orb. Time and best time are shown in a corner. When you clear the last level, your time is compared to your previous best and the run continues from level 1.
 
+## Report
+
+If you want more detail on the project (architecture, implementation choices, issues faced), the full write-up is in the `docs/` folder. It is available in French only.
+
+[Rapport_Kevin_Ferreira.pdf](docs/Rapport_Kevin_Ferreira.pdf)
+
 ---
 
 <img src="data/images/FR-DE_HEI.png" alt="HES-SO" height="40" align="right" style="margin-left: 16px" />
