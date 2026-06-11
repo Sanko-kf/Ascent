@@ -67,3 +67,11 @@ If you dash without pressing an arrow key, it goes left or right depending on wh
 Touch the exit tile to go to the next level. Spikes send you back to your spawn point on the same level. Orbs give your dash back; they disappear for a moment and then return. Springs bounce you upward.
 
 You get one dash until you land on the ground again or pick up an orb. Time and best time are shown in a corner. When you clear the last level, your time is compared to your previous best and the run continues from level 1.
+
+---
+
+<img src="bin/images/FR-DE_HEI.png" alt="HES-SO" height="40" align="right" style="margin-left: 16px" />
+<img src="bin/images/ISC_logo.png" alt="ISC" height="40" align="right" />
+
+School project — Module 101.2 <em>Prog. orientée-objets</em>, HES-SO Valais.<br />
+Kevin Ferreira, 2026. Built with GDX2D (HEVS).
